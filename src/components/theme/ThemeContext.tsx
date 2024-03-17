@@ -1,5 +1,4 @@
-// src/contexts/ThemeContext.tsx
-import React, { createContext, useState, useContext, PropsWithChildren, useEffect } from 'react';
+import React, { createContext, useState, PropsWithChildren, useEffect } from 'react';
 
 type Theme = 'light' | 'dark';
 type ThemeContextProps = {
@@ -7,7 +6,7 @@ type ThemeContextProps = {
   toggleTheme: () => void;
 };
 
-const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
+export const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
 export const ThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [theme, setTheme] = useState<Theme>('light');
@@ -25,12 +24,4 @@ export const ThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
   }, [theme]);
 
   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
-};
-
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
 };

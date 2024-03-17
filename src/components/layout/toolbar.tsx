@@ -1,6 +1,6 @@
-import { useTheme } from '@/components/theme/ThemeContext.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { LuMoon, LuSun } from 'react-icons/lu';
+import { useTheme } from '@/components/theme/useTheme.ts';
 
 export default function Toolbar() {
   const { theme, toggleTheme } = useTheme();

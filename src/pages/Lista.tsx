@@ -13,7 +13,7 @@ export type Payment = {
   email: string;
 };
 
-export default function ListaPacienti() {
+export default function Lista() {
   const columns: ColumnDef<Payment>[] = [
     {
       accessorKey: 'status',

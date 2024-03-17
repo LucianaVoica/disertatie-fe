@@ -10,7 +10,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog.tsx';
 import { toast } from '@/components/ui/use-toast.ts';
-import { Payment } from '@/pages/ListaPacienti.tsx';
+import { Payment } from '@/pages/Lista.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { LuTrash2 } from 'react-icons/lu';
 

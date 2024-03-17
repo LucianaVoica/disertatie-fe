@@ -1,4 +1,4 @@
-import { Payment } from '@/pages/ListaPacienti.tsx';
+import { Payment } from '@/pages/Lista.tsx';
 import Sterge from '@/pages/components/Sterge.tsx';
 
 type Props = {
