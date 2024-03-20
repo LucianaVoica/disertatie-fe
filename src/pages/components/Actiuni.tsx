@@ -1,16 +1,15 @@
-import { Payment } from '@/pages/Lista.tsx';
 import Sterge from '@/pages/components/Sterge.tsx';
 
 type Props = {
-  payment: Payment;
+  id: string;
 };
 
 export function Actiuni(props: Props) {
-  const { payment } = props;
+  const { id } = props;
 
   return (
     <div className={'flex flex-row gap-1'}>
-      <Sterge payment={payment} />
+      <Sterge id={id} />
     </div>
   );
 }

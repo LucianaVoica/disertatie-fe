@@ -3,68 +3,76 @@ import { DataTable } from '@/pages/components/DataTable.tsx';
 import { Header } from '@/components/ui/header.tsx';
 import { Adauga } from '@/pages/components/Adauga.tsx';
 import { useQuery } from '@tanstack/react-query';
-import { LuClock } from 'react-icons/lu';
 import { Actiuni } from '@/pages/components/Actiuni.tsx';
 
-export type Payment = {
+export type Pacient = {
   id: string;
-  amount: number;
-  status: 'pending' | 'processing' | 'success' | 'failed';
+  nume: string;
+  prenume: string;
   email: string;
+  telefon: string;
+  cnp: string;
+  serieCI: string;
+  numarCI: string;
 };
 
 export default function Lista() {
-  const columns: ColumnDef<Payment>[] = [
+  const columns: ColumnDef<Pacient>[] = [
     {
-      accessorKey: 'status',
-      header: 'Status',
-      cell: ({ row }) => (
-        <div className="flex flex-row gap-1 items-center">
-          <LuClock className="w-4 h-4" /> {row.original.status}
-        </div>
-      ),
+      accessorKey: 'nume',
+      header: 'Nume',
+    },
+    {
+      accessorKey: 'prenume',
+      header: 'Prenume',
+    },
+    {
+      accessorKey: 'cnp',
+      header: 'CNP',
+    },
+    {
+      accessorKey: 'serieCI',
+      header: 'Serie CI',
+    },
+    {
+      accessorKey: 'numarCI',
+      header: 'Numar CI',
     },
     {
       accessorKey: 'email',
       header: 'Email',
     },
     {
-      accessorKey: 'amount',
-      header: 'Amount',
+      accessorKey: 'telefon',
+      header: 'Telefon',
     },
     {
       accessorKey: 'id',
       header: 'Acțiuni',
-      cell: ({ row }) => <Actiuni payment={row.original} />,
+      cell: ({ row }) => <Actiuni id={row.original.id} />,
     },
   ];
 
-  async function fetchPayments(): Promise<Payment[]> {
-    // Fetch data from your API here.
-    return [
-      {
-        id: '728ed52f',
-        amount: 100,
-        status: 'pending',
-        email: 'm@example.com',
+  async function fetchPacienti(): Promise<Pacient[]> {
+    const response = await fetch('http://localhost:8080/pacienti', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      {
-        id: '728ed52g',
-        amount: 300,
-        status: 'failed',
-        email: 'q@example.com',
-      },
-    ];
+    });
+
+    const result = await response.json();
+    return result;
   }
 
   const { data } = useQuery({
     queryKey: ['lista'],
-    queryFn: () => fetchPayments(),
+    queryFn: () => fetchPacienti(),
   });
 
   return (
     <div className={'card'}>
-      <Header title={'Lista'}>
+      <Header title={'Pacienti'}>
         <Adauga />
       </Header>
       {data && (

@@ -10,21 +10,42 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog.tsx';
 import { toast } from '@/components/ui/use-toast.ts';
-import { Payment } from '@/pages/Lista.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { LuTrash2 } from 'react-icons/lu';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type Props = {
-  payment: Payment;
+  id: string;
 };
 
-export default function Sterge({ payment }: Props) {
-  const sterge = () => {
-    toast({
-      title: 'Vrei sa stergi serifule?',
-      description: payment.id,
+export default function Sterge({ id }: Props) {
+  const queryClient = useQueryClient();
+  async function sterge(id: string) {
+    const response = await fetch(`http://localhost:8080/pacienti/${id}/sterge`, {
+      method: 'DELETE',
     });
-  };
+
+    return response.json();
+  }
+
+  const { mutate } = useMutation({
+    mutationFn: (id: string) => sterge(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['lista'] });
+      toast({
+        title: 'Success',
+        description: 'Pacientul a fost șters cu succes!',
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: ['lista'] });
+      toast({
+        title: 'Error',
+        description: 'A apărut o eroare la ștergere.',
+        variant: 'destructive',
+      });
+    },
+  });
 
   return (
     <AlertDialog>
@@ -45,7 +66,7 @@ export default function Sterge({ payment }: Props) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={sterge}>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={() => mutate(id)}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

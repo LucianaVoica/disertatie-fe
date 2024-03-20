@@ -2,7 +2,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -10,71 +9,210 @@ import {
 } from '@/components/ui/dialog.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { Input } from '@/components/ui/input.tsx';
-import { LuPlusCircle } from 'react-icons/lu';
+import { LuPenSquare, LuPlusCircle } from 'react-icons/lu';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form.tsx';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form.tsx';
 import { toast } from '@/components/ui/use-toast.ts';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Textarea } from '@/components/ui/textarea.tsx';
+
+export type Pacient = {
+  nume: string;
+  prenume: string;
+  email: string;
+  telefon: string;
+  cnp: string;
+  serieCI: string;
+  numarCI: string;
+};
 
 function Adauga() {
+  const queryClient = useQueryClient();
+
   const formSchema = z.object({
-    username: z.string().min(2).max(50),
+    nume: z.string().min(2).max(50),
+    prenume: z.string().min(2).max(50),
+    email: z.string(),
+    telefon: z.string().max(10),
+    cnp: z.string().max(13),
+    serieCI: z.string().max(5),
+    numarCI: z.string().max(6),
+    adresa: z.string().max(255),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: 'eddie',
+    defaultValues: {},
+  });
+
+  async function adauga(data: Pacient) {
+    const response = await fetch('http://localhost:8080/pacienti/adauga', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    return response.json();
+  }
+
+  const { mutate } = useMutation({
+    mutationFn: (data: Pacient) => adauga(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['lista'] });
+      toast({
+        title: 'Success',
+        description: 'Operatie efectuata cu succes!',
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: ['lista'] });
+      toast({
+        title: 'Error',
+        description: 'Eroare',
+        variant: 'destructive',
+      });
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast({
-      title: 'Succes',
-      description: 'A mers sefule',
-    });
+    mutate(values);
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>
+        <Button variant={'accent'}>
           <LuPlusCircle className={'h-5 w-5 mr-2'} />
           Adaugă
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[475px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>Make changes to your profile here. Click save when you're done.</DialogDescription>
+          <DialogTitle className={'flex flex-row gap-2 items-center'}>
+            <LuPenSquare className={'h-5 w-5'} />
+            Adauga
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8">
+            className="flex flex-col gap-3 max-h-[475px] overflow-y-scroll p-1 ">
             <FormField
               control={form.control}
-              name="username"
+              name="nume"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Nume</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Ex: Popescu"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="prenume"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Prenume</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="EX: Ion"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="cnp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CNP</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="serieCI"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Serie CI</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="numarCI"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Numar CI</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Eddie"
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>This is your public display name.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="telefon"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Telefon</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="07..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="adresa"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Adresa</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
