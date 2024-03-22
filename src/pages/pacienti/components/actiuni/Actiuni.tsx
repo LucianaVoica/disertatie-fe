@@ -1,4 +1,4 @@
-import Sterge from '@/pages/components/actiuni/components/Sterge.tsx';
+import Sterge from '@/pages/pacienti/components/actiuni/components/Sterge.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { NavLink } from 'react-router-dom';
 import { LuFile } from 'react-icons/lu';

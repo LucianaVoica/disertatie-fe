@@ -1,9 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from '@/pages/components/DataTable.tsx';
+import { DataTable } from '@/pages/pacienti/components/DataTable.tsx';
 import { Header } from '@/components/ui/header.tsx';
-import { Adauga } from '@/pages/components/actiuni/components/Adauga.tsx';
+import { Adauga } from '@/pages/pacienti/components/actiuni/components/Adauga.tsx';
 import { useQuery } from '@tanstack/react-query';
-import { Actiuni } from '@/pages/components/actiuni/Actiuni.tsx';
+import { Actiuni } from '@/pages/pacienti/components/actiuni/Actiuni.tsx';
 import axios from 'axios';
 
 export type Pacient = {
