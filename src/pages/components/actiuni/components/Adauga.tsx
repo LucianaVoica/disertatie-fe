@@ -17,6 +17,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { toast } from '@/components/ui/use-toast.ts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Textarea } from '@/components/ui/textarea.tsx';
+import axios from 'axios';
 
 export type Pacient = {
   nume: string;
@@ -48,15 +49,8 @@ function Adauga() {
   });
 
   async function adauga(data: Pacient) {
-    const response = await fetch('http://localhost:8080/pacienti/adauga', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    return response.json();
+    const response = await axios.post('http://localhost:8080/pacienti/adauga', data);
+    return response.data;
   }
 
   const { mutate } = useMutation({
@@ -69,7 +63,6 @@ function Adauga() {
       });
     },
     onError: () => {
-      queryClient.invalidateQueries({ queryKey: ['lista'] });
       toast({
         title: 'Error',
         description: 'Eroare',

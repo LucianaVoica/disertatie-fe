@@ -13,6 +13,7 @@ import { toast } from '@/components/ui/use-toast.ts';
 import { Button } from '@/components/ui/button.tsx';
 import { LuTrash2 } from 'react-icons/lu';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 
 type Props = {
   id: string;
@@ -21,17 +22,13 @@ type Props = {
 export default function Sterge({ id }: Props) {
   const queryClient = useQueryClient();
   async function sterge(id: string) {
-    const response = await fetch(`http://localhost:8080/pacienti/${id}/sterge`, {
-      method: 'DELETE',
-    });
-
-    return response.json();
+    const response = await axios.delete(`http://localhost:8080/pacienti/${id}/sterge`);
+    return response.data;
   }
 
   const { mutate } = useMutation({
     mutationFn: (id: string) => sterge(id),
     onSuccess: () => {
-      console.log('Succes ');
       queryClient.invalidateQueries({ queryKey: ['lista'] });
       toast({
         title: 'Success',

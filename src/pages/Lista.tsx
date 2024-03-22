@@ -4,6 +4,7 @@ import { Header } from '@/components/ui/header.tsx';
 import { Adauga } from '@/pages/components/actiuni/components/Adauga.tsx';
 import { useQuery } from '@tanstack/react-query';
 import { Actiuni } from '@/pages/components/actiuni/Actiuni.tsx';
+import axios from 'axios';
 
 export type Pacient = {
   id: string;
@@ -54,15 +55,8 @@ export default function Lista() {
   ];
 
   async function fetchPacienti(): Promise<Pacient[]> {
-    const response = await fetch('http://localhost:8080/pacienti', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const result = await response.json();
-    return result;
+    const response = await axios.get('http://localhost:8080/pacienti');
+    return response.data;
   }
 
   const { data } = useQuery({
