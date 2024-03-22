@@ -31,18 +31,11 @@ export default function Sterge({ id }: Props) {
   const { mutate } = useMutation({
     mutationFn: (id: string) => sterge(id),
     onSuccess: () => {
+      console.log('Succes ');
       queryClient.invalidateQueries({ queryKey: ['lista'] });
       toast({
         title: 'Success',
         description: 'Pacientul a fost șters cu succes!',
-      });
-    },
-    onError: () => {
-      queryClient.invalidateQueries({ queryKey: ['lista'] });
-      toast({
-        title: 'Error',
-        description: 'A apărut o eroare la ștergere.',
-        variant: 'destructive',
       });
     },
   });
@@ -51,7 +44,8 @@ export default function Sterge({ id }: Props) {
     <AlertDialog>
       <AlertDialogTrigger>
         <Button
-          variant={'destructive'}
+          className={'text-red-600'}
+          variant={'ghost'}
           size={'icon'}>
           <LuTrash2 className="w-5 h-5" />
         </Button>

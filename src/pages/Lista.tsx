@@ -1,9 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '@/pages/components/DataTable.tsx';
 import { Header } from '@/components/ui/header.tsx';
-import { Adauga } from '@/pages/components/Adauga.tsx';
+import { Adauga } from '@/pages/components/actiuni/components/Adauga.tsx';
 import { useQuery } from '@tanstack/react-query';
-import { Actiuni } from '@/pages/components/Actiuni.tsx';
+import { Actiuni } from '@/pages/components/actiuni/Actiuni.tsx';
 
 export type Pacient = {
   id: string;
