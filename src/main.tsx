@@ -7,6 +7,7 @@ import Lista from '@/pages/pacienti/Lista.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster.tsx';
 import { ThemeProvider } from '@/components/theme/ThemeContext.tsx';
+import { DetaliiPacient } from '@/pages/pacienti/components/detalii/DetaliiPacient.tsx';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Lista />,
+      },
+      {
+        path: ':id',
+        element: <DetaliiPacient />,
       },
     ],
   },

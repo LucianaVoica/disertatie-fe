@@ -12,11 +12,12 @@ export function Actiuni(props: Props) {
 
   return (
     <div className={'flex flex-row gap-1'}>
+      {/*Navigare la detalii*/}
       <Button
         variant={'ghost'}
         size={'icon'}
         asChild>
-        <NavLink to={'/'}>
+        <NavLink to={`/${id}`}>
           <LuFile className={'w-5 h-5'} />
         </NavLink>
       </Button>
