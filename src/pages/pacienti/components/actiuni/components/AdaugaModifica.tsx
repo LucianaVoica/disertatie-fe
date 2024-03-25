@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { Input } from '@/components/ui/input.tsx';
-import { LuPenSquare, LuPlusCircle } from 'react-icons/lu';
+import { LuFolderEdit, LuPenSquare, LuPlusCircle } from 'react-icons/lu';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -20,6 +20,7 @@ import { Textarea } from '@/components/ui/textarea.tsx';
 import axios from 'axios';
 
 export type Pacient = {
+  id?: string;
   nume: string;
   prenume: string;
   email: string;
@@ -29,7 +30,7 @@ export type Pacient = {
   numarCI: string;
 };
 
-function Adauga() {
+function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: boolean }) {
   const queryClient = useQueryClient();
 
   const formSchema = z.object({
@@ -45,7 +46,7 @@ function Adauga() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    defaultValues: { ...pacient },
   });
 
   async function adauga(data: Pacient) {
@@ -53,7 +54,12 @@ function Adauga() {
     return response.data;
   }
 
-  const { mutate } = useMutation({
+  async function modifica(data: Pacient) {
+    const response = await axios.post(`http://localhost:8080/pacienti/${pacient?.id}/modifica`, data);
+    return response.data;
+  }
+
+  const { mutate: adaugaPacient } = useMutation({
     mutationFn: (data: Pacient) => adauga(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lista'] });
@@ -71,23 +77,49 @@ function Adauga() {
     },
   });
 
+  const { mutate: modificaPacient } = useMutation({
+    mutationFn: (data: Pacient) => modifica(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['lista'] });
+      queryClient.invalidateQueries({ queryKey: ['detalii-pacient', pacient?.id] });
+      toast({
+        title: 'Success',
+        description: 'Operatie efectuata cu succes!',
+      });
+    },
+    onError: () => {
+      toast({
+        title: 'Error',
+        description: 'Eroare',
+        variant: 'destructive',
+      });
+    },
+  });
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    mutate(values);
+    if (!pacient?.id) {
+      adaugaPacient(values);
+    } else {
+      modificaPacient(values);
+    }
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={'accent'}>
-          <LuPlusCircle className={'h-5 w-5 mr-2'} />
-          Adaugă
+        <Button
+          className={'text-blue-600'}
+          variant={'ghost'}
+          size={isDetail ? 'default' : 'icon'}>
+          {!pacient?.id ? <LuPlusCircle className={'h-5 w-5 mr-2'} /> : <LuFolderEdit className={'h-5 w-5 mr-2'} />}
+          {isDetail && (!pacient?.id ? 'Adauga' : 'Modifica')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[475px]">
         <DialogHeader>
           <DialogTitle className={'flex flex-row gap-2 items-center'}>
             <LuPenSquare className={'h-5 w-5'} />
-            Adauga
+            {!pacient?.id ? 'Adauga' : 'Modifica'}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -226,4 +258,4 @@ function Adauga() {
   );
 }
 
-export { Adauga };
+export { AdaugaModifica };

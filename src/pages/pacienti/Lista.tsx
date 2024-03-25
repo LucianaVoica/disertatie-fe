@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '@/pages/pacienti/components/DataTable.tsx';
 import { Header } from '@/components/ui/header.tsx';
-import { Adauga } from '@/pages/pacienti/components/actiuni/components/Adauga.tsx';
+import { AdaugaModifica } from '@/pages/pacienti/components/actiuni/components/AdaugaModifica.tsx';
 import { useQuery } from '@tanstack/react-query';
 import { Actiuni } from '@/pages/pacienti/components/actiuni/Actiuni.tsx';
 import axios from 'axios';
@@ -15,6 +15,7 @@ export type Pacient = {
   cnp: string;
   serieCI: string;
   numarCI: string;
+  adresa: string;
 };
 
 export default function Lista() {
@@ -50,7 +51,7 @@ export default function Lista() {
     {
       accessorKey: 'id',
       header: 'Acțiuni',
-      cell: ({ row }) => <Actiuni id={row.original.id} />,
+      cell: ({ row }) => <Actiuni pacient={row.original} />,
     },
   ];
 
@@ -67,7 +68,7 @@ export default function Lista() {
   return (
     <div className={'card'}>
       <Header title={'Pacienti'}>
-        <Adauga />
+        <AdaugaModifica isDetail={true} />
       </Header>
       {data && (
         <DataTable
