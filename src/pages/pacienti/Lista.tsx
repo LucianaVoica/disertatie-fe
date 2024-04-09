@@ -1,22 +1,11 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from '@/pages/pacienti/components/DataTable.tsx';
+import { DataTable } from '@/components/data-table/DataTable.tsx';
 import { Header } from '@/components/ui/header.tsx';
-import { AdaugaModifica } from '@/pages/pacienti/components/actiuni/components/AdaugaModifica.tsx';
+import { AdaugaModifica } from '@/pages/pacienti/components/AdaugaModifica.tsx';
 import { useQuery } from '@tanstack/react-query';
-import { Actiuni } from '@/pages/pacienti/components/actiuni/Actiuni.tsx';
+import { Actiuni } from '@/pages/pacienti/components/Actiuni.tsx';
 import axios from 'axios';
-
-export type Pacient = {
-  id: string;
-  nume: string;
-  prenume: string;
-  email: string;
-  telefon: string;
-  cnp: string;
-  serieCI: string;
-  numarCI: string;
-  adresa: string;
-};
+import { Pacient } from '@/pages/pacienti/components/types.ts';
 
 export default function Lista() {
   const columns: ColumnDef<Pacient>[] = [
@@ -70,12 +59,10 @@ export default function Lista() {
       <Header title={'Pacienti'}>
         <AdaugaModifica isDetail={true} />
       </Header>
-      {data && (
-        <DataTable
-          columns={columns}
-          data={data}
-        />
-      )}
+      <DataTable
+        columns={columns}
+        data={data}
+      />
     </div>
   );
 }

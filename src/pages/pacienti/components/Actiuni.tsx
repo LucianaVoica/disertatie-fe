@@ -1,8 +1,8 @@
-import Sterge from '@/pages/pacienti/components/actiuni/components/Sterge.tsx';
+import Sterge from '@/pages/pacienti/components/Sterge.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { NavLink } from 'react-router-dom';
 import { LuFile } from 'react-icons/lu';
-import { AdaugaModifica } from '@/pages/pacienti/components/actiuni/components/AdaugaModifica.tsx';
+import { AdaugaModifica } from '@/pages/pacienti/components/AdaugaModifica.tsx';
 import { Pacient } from '@/pages/pacienti/Lista.tsx';
 
 type Props = {

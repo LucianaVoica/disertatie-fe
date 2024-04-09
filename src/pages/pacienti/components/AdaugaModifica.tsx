@@ -18,17 +18,7 @@ import { toast } from '@/components/ui/use-toast.ts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Textarea } from '@/components/ui/textarea.tsx';
 import axios from 'axios';
-
-export type Pacient = {
-  id?: string;
-  nume: string;
-  prenume: string;
-  email: string;
-  telefon: string;
-  cnp: string;
-  serieCI: string;
-  numarCI: string;
-};
+import { Pacient } from '@/pages/pacienti/components/types.ts';
 
 function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: boolean }) {
   const queryClient = useQueryClient();
@@ -107,10 +97,7 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          className={'text-blue-600'}
-          variant={'ghost'}
-          size={isDetail ? 'default' : 'icon'}>
+        <Button size={isDetail ? 'default' : 'icon'}>
           {!pacient?.id ? <LuPlusCircle className={'h-5 w-5 mr-2'} /> : <LuFolderEdit className={'h-5 w-5 mr-2'} />}
           {isDetail && (!pacient?.id ? 'Adauga' : 'Modifica')}
         </Button>
