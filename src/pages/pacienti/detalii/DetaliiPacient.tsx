@@ -1,9 +1,9 @@
 import React from 'react';
-import { Pacient } from '@/pages/pacienti/Lista.tsx';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { InformatiiPacient } from '@/pages/pacienti/detalii/components/InformatiiPacient.tsx';
+import { Pacient } from '@/pages/pacienti/components/types.ts';
 
 export const DetaliiPacient: React.FC = () => {
   const { id } = useParams();
