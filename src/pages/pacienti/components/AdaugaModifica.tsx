@@ -9,14 +9,13 @@ import {
 } from '@/components/ui/dialog.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { Input } from '@/components/ui/input.tsx';
-import { LuFolderEdit, LuPenSquare, LuPlusCircle } from 'react-icons/lu';
+import { LuPenSquare, LuPlusCircle } from 'react-icons/lu';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form.tsx';
 import { toast } from '@/components/ui/use-toast.ts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Textarea } from '@/components/ui/textarea.tsx';
 import axios from 'axios';
 import { Pacient } from '@/pages/pacienti/components/types.ts';
 
@@ -31,7 +30,6 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
     cnp: z.string().max(13),
     serieCI: z.string().max(5),
     numarCI: z.string().max(6),
-    adresa: z.string().max(255),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -97,15 +95,18 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size={isDetail ? 'default' : 'icon'}>
-          {!pacient?.id ? <LuPlusCircle className={'h-5 w-5 mr-2'} /> : <LuFolderEdit className={'h-5 w-5 mr-2'} />}
+        <Button
+          className={!isDetail ? 'text-blue-600 hover:text-blue-900/80' : ''}
+          variant={isDetail ? 'accent' : 'ghost'}
+          size={isDetail ? 'default' : 'icon'}>
+          {!pacient?.id ? <LuPlusCircle className={'h-5 w-5 mr-2'} /> : <LuPenSquare className={'h-5 w-5 mr-2'} />}
           {isDetail && (!pacient?.id ? 'Adauga' : 'Modifica')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[475px]">
+      <DialogContent className="sm:max-w-[520px]">
         <DialogHeader>
           <DialogTitle className={'flex flex-row gap-2 items-center'}>
-            <LuPenSquare className={'h-5 w-5'} />
+            {!pacient?.id ? <LuPlusCircle className={'h-5 w-5'} /> : <LuPenSquare className={'h-5 w-5'} />}
             {!pacient?.id ? 'Adauga' : 'Modifica'}
           </DialogTitle>
         </DialogHeader>
@@ -116,14 +117,12 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
             <FormField
               control={form.control}
               name="nume"
+              defaultValue={pacient?.nume}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nume</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Ex: Popescu"
-                      {...field}
-                    />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -132,14 +131,12 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
             <FormField
               control={form.control}
               name="prenume"
+              defaultValue={pacient?.prenume}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Prenume</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="EX: Ion"
-                      {...field}
-                    />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -148,6 +145,7 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
             <FormField
               control={form.control}
               name="cnp"
+              defaultValue={pacient?.cnp}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>CNP</FormLabel>
@@ -161,6 +159,7 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
             <FormField
               control={form.control}
               name="serieCI"
+              defaultValue={pacient?.serieCI}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Serie CI</FormLabel>
@@ -174,14 +173,12 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
             <FormField
               control={form.control}
               name="numarCI"
+              defaultValue={pacient?.numarCI}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Numar CI</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Eddie"
-                      {...field}
-                    />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -190,14 +187,12 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
             <FormField
               control={form.control}
               name="telefon"
+              defaultValue={pacient?.telefon}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Telefon</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="07..."
-                      {...field}
-                    />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -206,6 +201,7 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
             <FormField
               control={form.control}
               name="email"
+              defaultValue={pacient?.email}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
@@ -216,25 +212,15 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="adresa"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Adresa</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <DialogFooter>
               <DialogClose asChild>
                 <Button
                   disabled={!form.formState.isValid}
                   type="submit">
-                  Submit
+                  <div className="flex flex-row gap-2 items-center">
+                    {!pacient?.id ? <LuPlusCircle className={'h-5 w-5'} /> : <LuPenSquare className={'h-5 w-5'} />}
+                    {!pacient?.id ? 'Adauga' : 'Modifica'}
+                  </div>
                 </Button>
               </DialogClose>
             </DialogFooter>

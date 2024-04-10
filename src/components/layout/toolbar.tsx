@@ -14,7 +14,9 @@ export default function Toolbar() {
         <Logo />
 
         <div className="flex flex-row gap-2 items-center">
-          <Button asChild>
+          <Button
+            variant={'ghost'}
+            asChild>
             <NavLink to={'/pacienti'}>
               <div className="flex flex-row items-center gap-1">
                 <FaUserDoctor className={'w-4 h-4'} />
