@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LuUser } from 'react-icons/lu';
 import { AdaugaModifica } from '@/pages/pacienti/components/AdaugaModifica.tsx';
 import { Header } from '@/components/ui/header.tsx';
 import { InfoBlock } from '@/components/info-block/InfoBlock.tsx';
-import { Pacient } from '@/pages/pacienti/components/types.ts';
+import { Pacient } from '@/pages/pacienti/types/types.ts';
+import Sterge from '@/pages/pacienti/components/Sterge.tsx';
+import { BreadcrumbsService } from '@/components/breadcrumbs';
 
 type Props = {
   data?: Pacient;
 };
 
 export const InformatiiPacient: React.FC<Props> = ({ data }) => {
-  const { nume, prenume, cnp, serieCI, numarCI, email, telefon } = data || {};
+  const { id, nume, prenume, cnp, serieCI, numarCI, email, telefon } = data || {};
+
+  useEffect(() => {
+    if (!id) return;
+    BreadcrumbsService.setNameForPath(id, `${nume} ${prenume}`);
+  }, [id, nume, prenume]);
 
   return (
     <div className="card">
@@ -20,10 +27,18 @@ export const InformatiiPacient: React.FC<Props> = ({ data }) => {
             <LuUser style={{ fontSize: '24px' }} /> {nume} {prenume}
           </div>
         }>
-        <AdaugaModifica
-          pacient={data}
-          isDetail={true}
-        />
+        <div className="flex flex-row gap-2">
+          {data?.id && (
+            <Sterge
+              id={data.id}
+              isDetail={true}
+            />
+          )}
+          <AdaugaModifica
+            pacient={data}
+            isDetail={true}
+          />
+        </div>
       </Header>
 
       <div className="grid grid-cols-3 gap-3 px-4">

@@ -5,7 +5,8 @@ import { AdaugaModifica } from '@/pages/pacienti/components/AdaugaModifica.tsx';
 import { useQuery } from '@tanstack/react-query';
 import { Actiuni } from '@/pages/pacienti/components/Actiuni.tsx';
 import axios from 'axios';
-import { Pacient } from '@/pages/pacienti/components/types.ts';
+import { Pacient } from '@/pages/pacienti/types/types.ts';
+import { CommonTerms } from '@/lib/common.terms.ts';
 
 export default function Lista() {
   const columns: ColumnDef<Pacient>[] = [
@@ -39,7 +40,7 @@ export default function Lista() {
     },
     {
       accessorKey: 'id',
-      header: 'Acțiuni',
+      header: CommonTerms.Actions,
       cell: ({ row }) => <Actiuni pacient={row.original} />,
     },
   ];

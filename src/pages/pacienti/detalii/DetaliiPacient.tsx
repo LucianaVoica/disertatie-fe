@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { InformatiiPacient } from '@/pages/pacienti/detalii/informatii/InformatiiPacient.tsx';
-import { Pacient } from '@/pages/pacienti/components/types.ts';
+import { Pacient } from '@/pages/pacienti/types/types.ts';
 
 export const DetaliiPacient: React.FC = () => {
   const { id } = useParams();

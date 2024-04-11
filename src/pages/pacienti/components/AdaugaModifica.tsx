@@ -10,22 +10,23 @@ import {
 import { Button } from '@/components/ui/button.tsx';
 import { Input } from '@/components/ui/input.tsx';
 import { LuPenSquare, LuPlusCircle } from 'react-icons/lu';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form.tsx';
 import { toast } from '@/components/ui/use-toast.ts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { Pacient } from '@/pages/pacienti/components/types.ts';
+import { Pacient } from '@/pages/pacienti/types/types.ts';
+import { z } from '@/main';
+import { CommonTerms } from '@/lib/common.terms.ts';
 
-function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: boolean }) {
+export function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: boolean }) {
   const queryClient = useQueryClient();
 
   const formSchema = z.object({
-    nume: z.string().min(2).max(50),
-    prenume: z.string().min(2).max(50),
-    email: z.string(),
+    nume: z.string().min(1).max(50),
+    prenume: z.string().min(1).max(50),
+    email: z.string().min(1),
     telefon: z.string().max(10),
     cnp: z.string().max(13),
     serieCI: z.string().max(5),
@@ -34,7 +35,7 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { ...pacient },
+    mode: 'onChange',
   });
 
   async function adauga(data: Pacient) {
@@ -71,14 +72,14 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
       queryClient.invalidateQueries({ queryKey: ['lista'] });
       queryClient.invalidateQueries({ queryKey: ['detalii-pacient', pacient?.id] });
       toast({
-        title: 'Success',
-        description: 'Operatie efectuata cu succes!',
+        title: 'Succes',
+        description: 'Operație efectuată cu succes!',
       });
     },
     onError: () => {
       toast({
-        title: 'Error',
-        description: 'Eroare',
+        title: 'Eroare',
+        description: 'Ceva nu a mers conform planului',
         variant: 'destructive',
       });
     },
@@ -100,20 +101,20 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
           variant={isDetail ? 'accent' : 'ghost'}
           size={isDetail ? 'default' : 'icon'}>
           {!pacient?.id ? <LuPlusCircle className={'h-5 w-5 mr-2'} /> : <LuPenSquare className={'h-5 w-5 mr-2'} />}
-          {isDetail && (!pacient?.id ? 'Adauga' : 'Modifica')}
+          {isDetail && (!pacient?.id ? CommonTerms.Add : CommonTerms.Edit)}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[520px]">
         <DialogHeader>
           <DialogTitle className={'flex flex-row gap-2 items-center'}>
             {!pacient?.id ? <LuPlusCircle className={'h-5 w-5'} /> : <LuPenSquare className={'h-5 w-5'} />}
-            {!pacient?.id ? 'Adauga' : 'Modifica'}
+            {!pacient?.id ? CommonTerms.Add : CommonTerms.Edit}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-3 max-h-[475px] overflow-y-scroll p-1 ">
+            className="flex flex-col gap-3 max-h-[475px] overflow-y-scroll px-3 py-1.5">
             <FormField
               control={form.control}
               name="nume"
@@ -176,7 +177,7 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
               defaultValue={pacient?.numarCI}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Numar CI</FormLabel>
+                  <FormLabel>Număr CI</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -219,7 +220,7 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
                   type="submit">
                   <div className="flex flex-row gap-2 items-center">
                     {!pacient?.id ? <LuPlusCircle className={'h-5 w-5'} /> : <LuPenSquare className={'h-5 w-5'} />}
-                    {!pacient?.id ? 'Adauga' : 'Modifica'}
+                    {!pacient?.id ? CommonTerms.Add : CommonTerms.Edit}
                   </div>
                 </Button>
               </DialogClose>
@@ -230,5 +231,3 @@ function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: b
     </Dialog>
   );
 }
-
-export { AdaugaModifica };

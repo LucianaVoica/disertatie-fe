@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 *::-webkit-scrollbar {
-  width: 0px;
+  width: 0;
 }
 
 @layer base {
@@ -79,6 +79,6 @@
   }
 
   .card {
-    @apply overflow-x-hidden border rounded-xl bg-card
+    @apply overflow-x-hidden border rounded-xl bg-card;
   }
 }
