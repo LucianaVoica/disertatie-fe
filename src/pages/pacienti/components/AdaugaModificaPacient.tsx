@@ -15,12 +15,12 @@ import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form.tsx';
 import { toast } from '@/components/ui/use-toast.ts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { Pacient } from '@/pages/pacienti/types/types.ts';
 import { z } from '@/main';
 import { CommonTerms } from '@/lib/common.terms.ts';
+import axiosInstance from '@/lib/interceptor.ts';
 
-export function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDetail?: boolean }) {
+export function AdaugaModificaPacient({ pacient, isDetail }: { pacient?: Pacient; isDetail?: boolean }) {
   const queryClient = useQueryClient();
 
   const formSchema = z.object({
@@ -38,60 +38,55 @@ export function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDet
     mode: 'onChange',
   });
 
-  async function adauga(data: Pacient) {
-    const response = await axios.post('http://localhost:8080/pacienti/adauga', data);
-    return response.data;
+  async function adaugaModifica(data: Pacient) {
+    if (pacient?.id) {
+      const response = await axiosInstance.post(`http://localhost:8080/pacienti/${pacient.id}/modifica`, data);
+      return response.data;
+    } else {
+      const response = await axiosInstance.post('http://localhost:8080/pacienti/adauga', data);
+      return response.data;
+    }
   }
 
-  async function modifica(data: Pacient) {
-    const response = await axios.post(`http://localhost:8080/pacienti/${pacient?.id}/modifica`, data);
-    return response.data;
-  }
-
-  const { mutate: adaugaPacient } = useMutation({
-    mutationFn: (data: Pacient) => adauga(data),
+  const { mutate } = useMutation({
+    mutationFn: (data: Pacient) => adaugaModifica(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lista'] });
-      toast({
-        title: 'Success',
-        description: 'Operatie efectuata cu succes!',
-      });
-    },
-    onError: () => {
-      toast({
-        title: 'Error',
-        description: 'Eroare',
-        variant: 'destructive',
-      });
-    },
-  });
-
-  const { mutate: modificaPacient } = useMutation({
-    mutationFn: (data: Pacient) => modifica(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['lista'] });
-      queryClient.invalidateQueries({ queryKey: ['detalii-pacient', pacient?.id] });
+      pacient?.id && queryClient.invalidateQueries({ queryKey: ['detalii-pacient', pacient.id] });
       toast({
         title: 'Succes',
         description: 'Operație efectuată cu succes!',
       });
     },
-    onError: () => {
-      toast({
-        title: 'Eroare',
-        description: 'Ceva nu a mers conform planului',
-        variant: 'destructive',
-      });
-    },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!pacient?.id) {
-      adaugaPacient(values);
-    } else {
-      modificaPacient(values);
-    }
+    mutate(values);
+    form.reset();
   }
+
+  const prefill = () => {
+    const numeArray = ['Popescu', 'Ionescu', 'Georgescu', 'Dumitrescu', 'Petrescu'];
+    const prenumeArray = ['Ion', 'Vasile', 'Gheorghe', 'Mihai', 'Andrei'];
+    const serieCIArray = ['AB', 'BC', 'BR', 'BZ', 'CS'];
+
+    const randomNume = numeArray[Math.floor(Math.random() * numeArray.length)];
+    const randomPrenume = prenumeArray[Math.floor(Math.random() * prenumeArray.length)];
+    const randomEmail = `${randomPrenume.toLowerCase()}.${randomNume.toLowerCase()}@gmail.com`;
+    const randomPhone = Math.floor(Math.random() * 9000000000) + 1000000000; // generates a random 10 digit number
+    const randomCNP = Math.floor(Math.random() * 9000000000000) + 1000000000000; // generates a random 13 digit number
+    const randomSerieCI = serieCIArray[Math.floor(Math.random() * serieCIArray.length)];
+    const randomCI = Math.floor(Math.random() * 900000) + 100000; // generates a random 6 digit number
+
+    form.setValue('nume', randomNume);
+    form.setValue('prenume', randomPrenume);
+    form.setValue('email', randomEmail);
+    form.setValue('telefon', randomPhone.toString());
+    form.setValue('cnp', randomCNP.toString());
+    form.setValue('serieCI', randomSerieCI);
+    form.setValue('numarCI', randomCI.toString());
+    form.trigger();
+  };
 
   return (
     <Dialog>
@@ -214,6 +209,12 @@ export function AdaugaModifica({ pacient, isDetail }: { pacient?: Pacient; isDet
               )}
             />
             <DialogFooter>
+              <Button
+                type={'button'}
+                onClick={prefill}
+                variant="outline">
+                {CommonTerms.Prefill}
+              </Button>
               <DialogClose asChild>
                 <Button
                   disabled={!form.formState.isValid}

@@ -13,20 +13,20 @@ import { toast } from '@/components/ui/use-toast.ts';
 import { Button } from '@/components/ui/button.tsx';
 import { LuTrash2 } from 'react-icons/lu';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '@/lib/interceptor.ts';
 
 type Props = {
   id: string;
   isDetail?: boolean;
 };
 
-export default function Sterge({ id, isDetail }: Props) {
+export default function StergePacient({ id, isDetail }: Props) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   async function sterge(id: string) {
-    const response = await axios.delete(`http://localhost:8080/pacienti/${id}/sterge`);
+    const response = await axiosInstance.delete(`http://localhost:8080/pacienti/${id}/sterge`);
     return response.data;
   }
 
@@ -35,7 +35,6 @@ export default function Sterge({ id, isDetail }: Props) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lista'] });
       isDetail && navigate('/pacienti');
-
       toast({
         title: 'Success',
         description: 'Pacientul a fost șters cu succes!',

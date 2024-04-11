@@ -31,4 +31,5 @@ export const CommonTerms = {
   Unlock: 'Deblochează',
 
   Actions: 'Acțiuni',
+  Prefill: 'Precompletează',
 };

@@ -14,7 +14,7 @@ type Props = {
 export const Breadcrumbs: React.FC<Props> = ({ breadcrumbs, homeUrl = '/', className }) => {
   return (
     <nav
-      className={twMerge('box-border hidden h-[5vh] border-b px-8 lg:flex', className)}
+      className={twMerge('box-border hidden h-[5vh] border-b px-14 lg:flex', className)}
       aria-label="Breadcrumb">
       <ol className="flex w-full space-x-4 px-4 sm:px-0">
         <BreadcrumbIcon

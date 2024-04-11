@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { LuUser } from 'react-icons/lu';
-import { AdaugaModifica } from '@/pages/pacienti/components/AdaugaModifica.tsx';
+import { AdaugaModificaPacient } from '@/pages/pacienti/components/AdaugaModificaPacient.tsx';
 import { Header } from '@/components/ui/header.tsx';
 import { InfoBlock } from '@/components/info-block/InfoBlock.tsx';
 import { Pacient } from '@/pages/pacienti/types/types.ts';
-import Sterge from '@/pages/pacienti/components/Sterge.tsx';
+import StergePacient from '@/pages/pacienti/components/StergePacient.tsx';
 import { BreadcrumbsService } from '@/components/breadcrumbs';
 
 type Props = {
@@ -29,12 +29,12 @@ export const InformatiiPacient: React.FC<Props> = ({ data }) => {
         }>
         <div className="flex flex-row gap-2">
           {data?.id && (
-            <Sterge
+            <StergePacient
               id={data.id}
               isDetail={true}
             />
           )}
-          <AdaugaModifica
+          <AdaugaModificaPacient
             pacient={data}
             isDetail={true}
           />
