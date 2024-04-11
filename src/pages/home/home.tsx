@@ -41,7 +41,7 @@ export default function Home() {
           <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:gap-x-10 lg:px-8 lg:py-40">
             <div className="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
               <h1 className="mt-10 max-w-lg text-4xl font-bold tracking-tight sm:text-6xl">RadiX</h1>
-              <p className="mt-6 text-lg leading-8 text-gray-600">
+              <p className="mt-6 text-lg leading-8 text-secondary-foreground">
                 Încarcă radiografiile pulmonare și primește predicții precise în timp real, ajutând la identificarea
                 precoce a afecțiunilor și la îmbunătățirea procesului de tratament. Aducem inteligența artificială în
                 colaborare cu medicii pentru a oferi soluții rapide și eficiente în diagnosticarea și managementul
