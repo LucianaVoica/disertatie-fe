@@ -16,11 +16,18 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { toast } from '@/components/ui/use-toast.ts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Pacient } from '@/pages/pacienti/types/types.ts';
-import { z } from '@/main';
 import { CommonTerms } from '@/lib/common.terms.ts';
 import axiosInstance from '@/lib/interceptor.ts';
+import { useMemo } from 'react';
+import { z } from '@/zod.config.ts';
 
-export function AdaugaModificaPacient({ pacient, isDetail }: { pacient?: Pacient; isDetail?: boolean }) {
+type Props = {
+  pacient?: Pacient;
+  isDetail?: boolean;
+};
+
+export function AdaugaModificaPacient(props: Props) {
+  const { pacient, isDetail } = props;
   const queryClient = useQueryClient();
 
   const formSchema = z.object({
@@ -88,6 +95,18 @@ export function AdaugaModificaPacient({ pacient, isDetail }: { pacient?: Pacient
     form.trigger();
   };
 
+  const buttonContent = useMemo(() => {
+    const Icon = pacient?.id ? LuPenSquare : LuPlusCircle;
+    const label = pacient?.id ? CommonTerms.Edit : CommonTerms.Add;
+
+    return (
+      <>
+        <Icon className={'h-5 w-5 mr-2'} />
+        {isDetail && label}
+      </>
+    );
+  }, [pacient?.id, isDetail]);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -95,8 +114,7 @@ export function AdaugaModificaPacient({ pacient, isDetail }: { pacient?: Pacient
           className={!isDetail ? 'text-blue-600 hover:text-blue-900/80' : ''}
           variant={isDetail ? 'accent' : 'ghost'}
           size={isDetail ? 'default' : 'icon'}>
-          {!pacient?.id ? <LuPlusCircle className={'h-5 w-5 mr-2'} /> : <LuPenSquare className={'h-5 w-5 mr-2'} />}
-          {isDetail && (!pacient?.id ? CommonTerms.Add : CommonTerms.Edit)}
+          {buttonContent}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[520px]">

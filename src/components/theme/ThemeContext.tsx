@@ -9,8 +9,11 @@ type ThemeContextProps = {
 export const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
 export const ThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('light');
+  const getInitialTheme = (): Theme => {
+    return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+  };
 
+  const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   };
@@ -21,6 +24,9 @@ export const ThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
     } else {
       document.documentElement.classList.remove('dark');
     }
+
+    // Save the theme to local storage whenever it changes
+    localStorage.setItem('theme', theme);
   }, [theme]);
 
   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;

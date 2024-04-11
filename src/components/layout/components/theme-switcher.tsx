@@ -1,4 +1,4 @@
-import { useTheme } from '@/components/theme/useTheme.ts';
+import { useTheme } from '@/lib/hooks/useTheme.ts';
 import { Button } from '@/components/ui/button.tsx';
 import { LuMoon, LuSun } from 'react-icons/lu';
 
