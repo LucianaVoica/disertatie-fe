@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { InformatiiPacient } from '@/pages/pacienti/detalii/informatii/InformatiiPacient.tsx';
 import { Pacient } from '@/pages/pacienti/types/types.ts';
 import axiosInstance from '@/lib/interceptor.ts';
+import Predictie from '@/pages/predictie/Predictie.tsx';
 
 export const DetaliiPacient: React.FC = () => {
   const { id } = useParams();
@@ -17,5 +18,10 @@ export const DetaliiPacient: React.FC = () => {
     enabled: !!id,
   });
 
-  return <InformatiiPacient data={data} />;
+  return (
+    <div className="flex flex-col gap-3">
+      <InformatiiPacient data={data} />
+      <Predictie />
+    </div>
+  );
 };
